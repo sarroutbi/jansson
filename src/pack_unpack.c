@@ -475,6 +475,7 @@ static int unpack_object(scanner_t *s, json_t *root, va_list *ap) {
     hashtable_t key_set;
 
     if (hashtable_init(&key_set)) {
+        fprintf(stderr, "jansson: Error unpacking object out of memory!!!\n");
         set_error(s, "<internal>", json_error_out_of_memory, "Out of memory");
         return -1;
     }
@@ -593,6 +594,7 @@ static int unpack_object(scanner_t *s, json_t *root, va_list *ap) {
 
 out:
     hashtable_close(&key_set);
+    fprintf(stderr, "jansson: Error unpacking object:ret:=>%u<=\n", ret);
     return ret;
 }
 
@@ -673,7 +675,7 @@ static int unpack(scanner_t *s, json_t *root, va_list *ap) {
     switch (token(s)) {
         case '{':
             ok = unpack_object(s, root, ap);
-            if(!ok) {
+            if(ok) {
                 fprintf(stderr, "jansson: Error unpacking object!!!\n");
             }
             fprintf(stderr, "jansson: %s:%d->%s!!!\n", __FILE__, __LINE__,
@@ -682,7 +684,7 @@ static int unpack(scanner_t *s, json_t *root, va_list *ap) {
 
         case '[':
             ok = unpack_array(s, root, ap);
-            if(!ok) {
+            if(ok) {
                 fprintf(stderr, "jansson: Error unpacking array!!!\n");
             }
             fprintf(stderr, "jansson: %s:%d->%s!!!\n", __FILE__, __LINE__,
