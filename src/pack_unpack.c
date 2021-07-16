@@ -669,6 +669,7 @@ static int unpack_array(scanner_t *s, json_t *root, va_list *ap) {
 
 static int unpack(scanner_t *s, json_t *root, va_list *ap) {
     int ok = 0;
+    fprintf(stderr, "jansson: entering ...");
     switch (token(s)) {
         case '{':
             ok = unpack_object(s, root, ap);
@@ -834,6 +835,7 @@ static int unpack(scanner_t *s, json_t *root, va_list *ap) {
             fprintf(stderr, "jansson: Error on format char %c!!!", token(s));
             return -1;
     }
+    fprintf(stderr, "jansson: out ...");
 }
 
 json_t *json_vpack_ex(json_error_t *error, size_t flags, const char *fmt, va_list ap) {
