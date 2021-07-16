@@ -669,19 +669,19 @@ static int unpack_array(scanner_t *s, json_t *root, va_list *ap) {
 
 static int unpack(scanner_t *s, json_t *root, va_list *ap) {
     int ok = 0;
-    fprintf(stderr, "jansson: entering ...");
+    fprintf(stderr, "jansson: entering ...\n");
     switch (token(s)) {
         case '{':
             ok = unpack_object(s, root, ap);
             if(!ok) {
-                fprintf(stderr, "jansson: Error unpacking object!!!");
+                fprintf(stderr, "jansson: Error unpacking object!!!\n");
             }
             return ok;
 
         case '[':
             ok = unpack_array(s, root, ap);
             if(!ok) {
-                fprintf(stderr, "jansson: Error unpacking array!!!");
+                fprintf(stderr, "jansson: Error unpacking array!!!\n");
             }
             return ok;
 
@@ -690,7 +690,7 @@ static int unpack(scanner_t *s, json_t *root, va_list *ap) {
             if (root && !json_is_string(root)) {
                 set_error(s, "<validation>", json_error_wrong_type,
                           "Expected string, got %s", type_name(root));
-                fprintf(stderr, "jansson: Error unpacking string!!!");
+                fprintf(stderr, "jansson: Error unpacking string!!!\n");
                 return -1;
             }
 
@@ -701,7 +701,7 @@ static int unpack(scanner_t *s, json_t *root, va_list *ap) {
                 str_target = va_arg(*ap, const char **);
                 if (!str_target) {
                     set_error(s, "<args>", json_error_null_value, "NULL string argument");
-                    fprintf(stderr, "jansson: Error str target!!!");
+                    fprintf(stderr, "jansson: Error str target!!!\n");
                     return -1;
                 }
 
@@ -712,7 +712,7 @@ static int unpack(scanner_t *s, json_t *root, va_list *ap) {
                     if (!len_target) {
                         set_error(s, "<args>", json_error_null_value,
                                   "NULL string length argument");
-                        fprintf(stderr, "jansson: Error len target args!!!");
+                        fprintf(stderr, "jansson: Error len target args!!!\n");
                         return -1;
                     }
                 } else
@@ -730,7 +730,7 @@ static int unpack(scanner_t *s, json_t *root, va_list *ap) {
             if (root && !json_is_integer(root)) {
                 set_error(s, "<validation>", json_error_wrong_type,
                           "Expected integer, got %s", type_name(root));
-                fprintf(stderr, "jansson: Error on integer!!!");
+                fprintf(stderr, "jansson: Error on integer!!!\n");
                 return -1;
             }
 
@@ -746,7 +746,7 @@ static int unpack(scanner_t *s, json_t *root, va_list *ap) {
             if (root && !json_is_integer(root)) {
                 set_error(s, "<validation>", json_error_wrong_type,
                           "Expected integer, got %s", type_name(root));
-                fprintf(stderr, "jansson: Error on Integer!!!");
+                fprintf(stderr, "jansson: Error on Integer!!!\n");
                 return -1;
             }
 
@@ -762,7 +762,7 @@ static int unpack(scanner_t *s, json_t *root, va_list *ap) {
             if (root && !json_is_boolean(root)) {
                 set_error(s, "<validation>", json_error_wrong_type,
                           "Expected true or false, got %s", type_name(root));
-                fprintf(stderr, "jansson: Error on boolean!!!");
+                fprintf(stderr, "jansson: Error on boolean!!!\n");
                 return -1;
             }
 
@@ -793,7 +793,7 @@ static int unpack(scanner_t *s, json_t *root, va_list *ap) {
             if (root && !json_is_number(root)) {
                 set_error(s, "<validation>", json_error_wrong_type,
                           "Expected real or integer, got %s", type_name(root));
-                fprintf(stderr, "jansson: Error on real or integer float!!!");
+                fprintf(stderr, "jansson: Error on real or integer float!!!\n");
                 return -1;
             }
 
@@ -824,7 +824,7 @@ static int unpack(scanner_t *s, json_t *root, va_list *ap) {
             if (root && !json_is_null(root)) {
                 set_error(s, "<validation>", json_error_wrong_type,
                           "Expected null, got %s", type_name(root));
-                fprintf(stderr, "jansson: Error on null!!!");
+                fprintf(stderr, "jansson: Error on null!!!\n");
                 return -1;
             }
             return 0;
@@ -832,10 +832,10 @@ static int unpack(scanner_t *s, json_t *root, va_list *ap) {
         default:
             set_error(s, "<format>", json_error_invalid_format,
                       "Unexpected format character '%c'", token(s));
-            fprintf(stderr, "jansson: Error on format char %c!!!", token(s));
+            fprintf(stderr, "jansson: Error on format char %c!!!\n", token(s));
             return -1;
     }
-    fprintf(stderr, "jansson: out ...");
+    fprintf(stderr, "jansson: out ...\n");
 }
 
 json_t *json_vpack_ex(json_error_t *error, size_t flags, const char *fmt, va_list ap) {
