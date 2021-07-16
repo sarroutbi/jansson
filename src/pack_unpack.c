@@ -921,7 +921,7 @@ int json_vunpack_ex(json_t *root, json_error_t *error, size_t flags, const char 
 
     va_copy(ap_copy, ap);
     if (jjj_unpack(&s, root, &ap_copy)) {
-        fprintf(stderr, "jansson: Unpack Error!\n");
+        fprintf(stderr, "jansson: jjj_Unpack Error!\n");
         va_end(ap_copy);
         return -1;
     }
