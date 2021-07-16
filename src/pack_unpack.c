@@ -778,6 +778,7 @@ static int jjj_unpack(scanner_t *s, json_t *root, va_list *ap) {
             if (root && !json_is_real(root)) {
                 set_error(s, "<validation>", json_error_wrong_type,
                           "Expected real, got %s", type_name(root));
+                fprintf(stderr, "jansson: Error on flaot!!!\n");
                 return -1;
             }
 
