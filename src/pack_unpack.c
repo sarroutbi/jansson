@@ -668,17 +668,28 @@ static int unpack_array(scanner_t *s, json_t *root, va_list *ap) {
 }
 
 static int unpack(scanner_t *s, json_t *root, va_list *ap) {
+    int ok = 0;
     switch (token(s)) {
         case '{':
-            return unpack_object(s, root, ap);
+            ok = unpack_object(s, root, ap);
+            if(!ok) {
+                fprintf(stderr, "jansson: Error unpacking object!!!");
+            }
+            return ok;
 
         case '[':
-            return unpack_array(s, root, ap);
+            ok = unpack_array(s, root, ap);
+            if(!ok) {
+                fprintf(stderr, "jansson: Error unpacking array!!!");
+            }
+            return ok;
+
 
         case 's':
             if (root && !json_is_string(root)) {
                 set_error(s, "<validation>", json_error_wrong_type,
                           "Expected string, got %s", type_name(root));
+                fprintf(stderr, "jansson: Error unpacking string!!!");
                 return -1;
             }
 
@@ -689,6 +700,7 @@ static int unpack(scanner_t *s, json_t *root, va_list *ap) {
                 str_target = va_arg(*ap, const char **);
                 if (!str_target) {
                     set_error(s, "<args>", json_error_null_value, "NULL string argument");
+                    fprintf(stderr, "jansson: Error str target!!!");
                     return -1;
                 }
 
@@ -699,6 +711,7 @@ static int unpack(scanner_t *s, json_t *root, va_list *ap) {
                     if (!len_target) {
                         set_error(s, "<args>", json_error_null_value,
                                   "NULL string length argument");
+                        fprintf(stderr, "jansson: Error len target args!!!");
                         return -1;
                     }
                 } else
@@ -716,6 +729,7 @@ static int unpack(scanner_t *s, json_t *root, va_list *ap) {
             if (root && !json_is_integer(root)) {
                 set_error(s, "<validation>", json_error_wrong_type,
                           "Expected integer, got %s", type_name(root));
+                fprintf(stderr, "jansson: Error on integer!!!");
                 return -1;
             }
 
@@ -731,6 +745,7 @@ static int unpack(scanner_t *s, json_t *root, va_list *ap) {
             if (root && !json_is_integer(root)) {
                 set_error(s, "<validation>", json_error_wrong_type,
                           "Expected integer, got %s", type_name(root));
+                fprintf(stderr, "jansson: Error on Integer!!!");
                 return -1;
             }
 
@@ -746,6 +761,7 @@ static int unpack(scanner_t *s, json_t *root, va_list *ap) {
             if (root && !json_is_boolean(root)) {
                 set_error(s, "<validation>", json_error_wrong_type,
                           "Expected true or false, got %s", type_name(root));
+                fprintf(stderr, "jansson: Error on boolean!!!");
                 return -1;
             }
 
@@ -776,6 +792,7 @@ static int unpack(scanner_t *s, json_t *root, va_list *ap) {
             if (root && !json_is_number(root)) {
                 set_error(s, "<validation>", json_error_wrong_type,
                           "Expected real or integer, got %s", type_name(root));
+                fprintf(stderr, "jansson: Error on real or integer float!!!");
                 return -1;
             }
 
@@ -806,6 +823,7 @@ static int unpack(scanner_t *s, json_t *root, va_list *ap) {
             if (root && !json_is_null(root)) {
                 set_error(s, "<validation>", json_error_wrong_type,
                           "Expected null, got %s", type_name(root));
+                fprintf(stderr, "jansson: Error on null!!!");
                 return -1;
             }
             return 0;
@@ -813,6 +831,7 @@ static int unpack(scanner_t *s, json_t *root, va_list *ap) {
         default:
             set_error(s, "<format>", json_error_invalid_format,
                       "Unexpected format character '%c'", token(s));
+            fprintf(stderr, "jansson: Error on format char %c!!!", token(s));
             return -1;
     }
 }
