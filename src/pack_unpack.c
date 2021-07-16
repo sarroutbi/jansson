@@ -882,6 +882,7 @@ int json_vunpack_ex(json_t *root, json_error_t *error, size_t flags, const char 
     if (!root) {
         jsonp_error_init(error, "<root>");
         jsonp_error_set(error, -1, -1, 0, json_error_null_value, "NULL root value");
+        fprintf(stderr, "jansson: No root!\n");
         return -1;
     }
 
@@ -889,6 +890,7 @@ int json_vunpack_ex(json_t *root, json_error_t *error, size_t flags, const char 
         jsonp_error_init(error, "<format>");
         jsonp_error_set(error, -1, -1, 0, json_error_invalid_argument,
                         "NULL or empty format string");
+        fprintf(stderr, "jansson: Empty format!\n");
         return -1;
     }
     jsonp_error_init(error, NULL);
@@ -898,6 +900,7 @@ int json_vunpack_ex(json_t *root, json_error_t *error, size_t flags, const char 
 
     va_copy(ap_copy, ap);
     if (unpack(&s, root, &ap_copy)) {
+        fprintf(stderr, "jansson: Unpack Error!\n");
         va_end(ap_copy);
         return -1;
     }
@@ -905,6 +908,7 @@ int json_vunpack_ex(json_t *root, json_error_t *error, size_t flags, const char 
 
     next_token(&s);
     if (token(&s)) {
+        fprintf(stderr, "jansson: Unpack Error!\n");
         set_error(&s, "<format>", json_error_invalid_format,
                   "Garbage after format string");
         return -1;
