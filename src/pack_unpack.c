@@ -545,7 +545,7 @@ static int unpack_object(scanner_t *s, json_t *root, va_list *ap) {
             if (!value && !opt) {
                 set_error(s, "<validation>", json_error_item_not_found,
                           "Object item not found: %s", key);
-                fprintf(stderr, "jansson: Error unpacking object, Object item not found\n");
+                fprintf(stderr, "jansson: Error unpacking object, Object item not found: %s\n", key);
                 goto out;
             }
         }
