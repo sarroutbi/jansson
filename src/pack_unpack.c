@@ -541,6 +541,8 @@ static int unpack_object(scanner_t *s, json_t *root, va_list *ap) {
             /* skipping */
             value = NULL;
         } else {
+            fprintf(stderr, "jansson: Trying to get object root:[%s], key:[%s]\n",
+                    (root ? "NOT NULL": "NULL"), key);
             value = json_object_get(root, key);
             if (!value && !opt) {
                 set_error(s, "<validation>", json_error_item_not_found,
