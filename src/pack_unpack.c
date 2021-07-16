@@ -460,7 +460,7 @@ static json_t *pack(scanner_t *s, va_list *ap) {
     }
 }
 
-static int unpack(scanner_t *s, json_t *root, va_list *ap);
+static int jjj_unpack(scanner_t *s, json_t *root, va_list *ap);
 
 static int unpack_object(scanner_t *s, json_t *root, va_list *ap) {
     int ret = -1;
@@ -541,7 +541,7 @@ static int unpack_object(scanner_t *s, json_t *root, va_list *ap) {
             }
         }
 
-        if (unpack(s, value, ap))
+        if (jjj_unpack(s, value, ap))
             goto out;
 
         hashtable_set(&key_set, key, strlen(key), json_null());
@@ -647,7 +647,7 @@ static int unpack_array(scanner_t *s, json_t *root, va_list *ap) {
             }
         }
 
-        if (unpack(s, value, ap))
+        if (jjj_unpack(s, value, ap))
             return -1;
 
         next_token(s);
@@ -667,7 +667,7 @@ static int unpack_array(scanner_t *s, json_t *root, va_list *ap) {
     return 0;
 }
 
-static int unpack(scanner_t *s, json_t *root, va_list *ap) {
+static int jjj_unpack(scanner_t *s, json_t *root, va_list *ap) {
     int ok = 0;
     fprintf(stderr, "jansson: entering ...\n");
     switch (token(s)) {
@@ -920,7 +920,7 @@ int json_vunpack_ex(json_t *root, json_error_t *error, size_t flags, const char 
     next_token(&s);
 
     va_copy(ap_copy, ap);
-    if (unpack(&s, root, &ap_copy)) {
+    if (jjj_unpack(&s, root, &ap_copy)) {
         fprintf(stderr, "jansson: Unpack Error!\n");
         va_end(ap_copy);
         return -1;
