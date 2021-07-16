@@ -460,7 +460,7 @@ static json_t *pack(scanner_t *s, va_list *ap) {
     }
 }
 
-static int jjj_unpack(scanner_t *s, json_t *root, va_list *ap);
+static int unpack(scanner_t *s, json_t *root, va_list *ap);
 
 static int unpack_object(scanner_t *s, json_t *root, va_list *ap) {
     int ret = -1;
@@ -541,7 +541,7 @@ static int unpack_object(scanner_t *s, json_t *root, va_list *ap) {
             }
         }
 
-        if (jjj_unpack(s, value, ap))
+        if (unpack(s, value, ap))
             goto out;
 
         hashtable_set(&key_set, key, strlen(key), json_null());
@@ -647,7 +647,7 @@ static int unpack_array(scanner_t *s, json_t *root, va_list *ap) {
             }
         }
 
-        if (jjj_unpack(s, value, ap))
+        if (unpack(s, value, ap))
             return -1;
 
         next_token(s);
@@ -667,7 +667,7 @@ static int unpack_array(scanner_t *s, json_t *root, va_list *ap) {
     return 0;
 }
 
-static int jjj_unpack(scanner_t *s, json_t *root, va_list *ap) {
+static int unpack(scanner_t *s, json_t *root, va_list *ap) {
     int ok = 0;
     fprintf(stderr, "jansson: Entering ... token:=>%c<=\n", token(s));
     switch (token(s)) {
@@ -676,6 +676,8 @@ static int jjj_unpack(scanner_t *s, json_t *root, va_list *ap) {
             if(!ok) {
                 fprintf(stderr, "jansson: Error unpacking object!!!\n");
             }
+            fprintf(stderr, "jansson: %s:%d->%s!!!\n", __FILE__, __LINE__,
+                    __FUNCTION__);
             return ok;
 
         case '[':
@@ -683,10 +685,13 @@ static int jjj_unpack(scanner_t *s, json_t *root, va_list *ap) {
             if(!ok) {
                 fprintf(stderr, "jansson: Error unpacking array!!!\n");
             }
+            fprintf(stderr, "jansson: %s:%d->%s!!!\n", __FILE__, __LINE__,
+                    __FUNCTION__);
             return ok;
 
-
         case 's':
+            fprintf(stderr, "jansson: %s:%d->%s!!!\n", __FILE__, __LINE__,
+                    __FUNCTION__);
             if (root && !json_is_string(root)) {
                 set_error(s, "<validation>", json_error_wrong_type,
                           "Expected string, got %s", type_name(root));
@@ -724,6 +729,8 @@ static int jjj_unpack(scanner_t *s, json_t *root, va_list *ap) {
                         *len_target = json_string_length(root);
                 }
             }
+            fprintf(stderr, "jansson: %s:%d->%s!!!\n", __FILE__, __LINE__,
+                    __FUNCTION__);
             return 0;
 
         case 'i':
@@ -739,7 +746,8 @@ static int jjj_unpack(scanner_t *s, json_t *root, va_list *ap) {
                 if (root)
                     *target = (int)json_integer_value(root);
             }
-
+            fprintf(stderr, "jansson: %s:%d->%s!!!\n", __FILE__, __LINE__,
+                    __FUNCTION__);
             return 0;
 
         case 'I':
@@ -755,7 +763,8 @@ static int jjj_unpack(scanner_t *s, json_t *root, va_list *ap) {
                 if (root)
                     *target = json_integer_value(root);
             }
-
+            fprintf(stderr, "jansson: %s:%d->%s!!!\n", __FILE__, __LINE__,
+                    __FUNCTION__);
             return 0;
 
         case 'b':
@@ -771,7 +780,8 @@ static int jjj_unpack(scanner_t *s, json_t *root, va_list *ap) {
                 if (root)
                     *target = json_is_true(root);
             }
-
+            fprintf(stderr, "jansson: %s:%d->%s!!!\n", __FILE__, __LINE__,
+                    __FUNCTION__);
             return 0;
 
         case 'f':
@@ -787,7 +797,8 @@ static int jjj_unpack(scanner_t *s, json_t *root, va_list *ap) {
                 if (root)
                     *target = json_real_value(root);
             }
-
+            fprintf(stderr, "jansson: %s:%d->%s!!!\n", __FILE__, __LINE__,
+                    __FUNCTION__);
             return 0;
 
         case 'F':
@@ -921,8 +932,8 @@ int json_vunpack_ex(json_t *root, json_error_t *error, size_t flags, const char 
     next_token(&s);
 
     va_copy(ap_copy, ap);
-    if (jjj_unpack(&s, root, &ap_copy)) {
-        fprintf(stderr, "jansson: jjj_Unpack Error!\n");
+    if (unpack(&s, root, &ap_copy)) {
+        fprintf(stderr, "jansson: unpack Error!\n");
         va_end(ap_copy);
         return -1;
     }
