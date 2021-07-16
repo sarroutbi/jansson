@@ -483,6 +483,8 @@ static int unpack_object(scanner_t *s, json_t *root, va_list *ap) {
     if (root && !json_is_object(root)) {
         set_error(s, "<validation>", json_error_wrong_type, "Expected object, got %s",
                   type_name(root));
+        fprintf(stderr, "jansson: Error unpacking object not an object:=>%s<=!!!\n",
+                type_name(root));
         goto out;
     }
     next_token(s);
@@ -496,12 +498,15 @@ static int unpack_object(scanner_t *s, json_t *root, va_list *ap) {
             set_error(s, "<format>", json_error_invalid_format,
                       "Expected '}' after '%c', got '%c'", (strict == 1 ? '!' : '*'),
                       token(s));
+            fprintf(stderr, "jansson: Error unpacking object, strict:=>%c<=!!!\n",
+                    token(s));
             goto out;
         }
 
         if (!token(s)) {
             set_error(s, "<format>", json_error_invalid_format,
                       "Unexpected end of format string");
+            fprintf(stderr, "jansson: Error unpacking object, unexpected end!!!\n");
             goto out;
         }
 
@@ -514,12 +519,14 @@ static int unpack_object(scanner_t *s, json_t *root, va_list *ap) {
         if (token(s) != 's') {
             set_error(s, "<format>", json_error_invalid_format,
                       "Expected format 's', got '%c'", token(s));
+            fprintf(stderr, "jansson: Error unpacking object, expected s, got:%c!!!\n", token(s));
             goto out;
         }
 
         key = va_arg(*ap, const char *);
         if (!key) {
             set_error(s, "<args>", json_error_null_value, "NULL object key");
+            fprintf(stderr, "jansson: Error unpacking object, No key\n");
             goto out;
         }
 
@@ -538,12 +545,15 @@ static int unpack_object(scanner_t *s, json_t *root, va_list *ap) {
             if (!value && !opt) {
                 set_error(s, "<validation>", json_error_item_not_found,
                           "Object item not found: %s", key);
+                fprintf(stderr, "jansson: Error unpacking object, Object item not found\n");
                 goto out;
             }
         }
 
-        if (unpack(s, value, ap))
+        if (unpack(s, value, ap)) {
+            fprintf(stderr, "jansson: Error unpacking object, unpack call\n");
             goto out;
+        }
 
         hashtable_set(&key_set, key, strlen(key), json_null());
         next_token(s);
@@ -586,6 +596,8 @@ static int unpack_object(scanner_t *s, json_t *root, va_list *ap) {
                       "%li object item(s) left unpacked: %s", unpacked,
                       keys_res ? "<unknown>" : strbuffer_value(&unrecognized_keys));
             strbuffer_close(&unrecognized_keys);
+            fprintf(stderr, "jansson: Error unpacking object, left unpacked: %s\n",
+                    keys_res ? "<unknown>" : strbuffer_value(&unrecognized_keys));
             goto out;
         }
     }
