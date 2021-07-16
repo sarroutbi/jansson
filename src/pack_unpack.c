@@ -941,7 +941,7 @@ int json_vunpack_ex(json_t *root, json_error_t *error, size_t flags, const char 
 
     next_token(&s);
     if (token(&s)) {
-        fprintf(stderr, "jansson: Unpack Error!\n");
+        fprintf(stderr, "jansson: token Error!\n");
         set_error(&s, "<format>", json_error_invalid_format,
                   "Garbage after format string");
         return -1;
