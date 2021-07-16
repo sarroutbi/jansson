@@ -669,7 +669,7 @@ static int unpack_array(scanner_t *s, json_t *root, va_list *ap) {
 
 static int jjj_unpack(scanner_t *s, json_t *root, va_list *ap) {
     int ok = 0;
-    fprintf(stderr, "jansson: entering ...\n");
+    fprintf(stderr, "jansson: Entering ... token:=>%c<=\n", token(s));
     switch (token(s)) {
         case '{':
             ok = unpack_object(s, root, ap);
